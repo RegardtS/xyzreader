@@ -22,6 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:scaleType="centerCrop"
+            android:transitionName="@string/transition_photo"
              />
 
         <TextView
@@ -55,4 +56,4 @@
     </LinearLayout>
 
 </android.support.v7.widget.CardView>
-<!-- From: file:/C:/Users/Regardt/Documents/StudioProjects/xyzreader/XYZReader/src/main/res/layout/list_item_article.xml -->
+<!-- From: file:/Users/regardtschindler/Documents/xyzreader/XYZReader/src/main/res/layout/list_item_article.xml -->

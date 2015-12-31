@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/C:/Users/Regardt/Documents/StudioProjects/xyzreader/XYZReader/build/intermediates/exploded-aar/com.android.support/design/23.1.1/res/values-v21/values-v21.xml -->
+    <!-- From: file:/Users/regardtschindler/Documents/xyzreader/XYZReader/build/intermediates/exploded-aar/com.android.support/design/23.1.1/res/values-v21/values-v21.xml -->
     <eat-comment/>
     <dimen name="design_navigation_padding_top_default">24dp</dimen>
-    <!-- From: file:/C:/Users/Regardt/Documents/StudioProjects/xyzreader/XYZReader/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/res/values-v21/values-v21.xml -->
+    <!-- From: file:/Users/regardtschindler/Documents/xyzreader/XYZReader/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/res/values-v21/values-v21.xml -->
     <eat-comment/>
     <style name="Base.TextAppearance.AppCompat" parent="android:TextAppearance.Material"/>
     <style name="Base.TextAppearance.AppCompat.Body1" parent="android:TextAppearance.Material.Body1"/>
@@ -241,11 +241,18 @@
     </style>
     <style name="Platform.ThemeOverlay.AppCompat.Dark"/>
     <style name="Platform.ThemeOverlay.AppCompat.Light"/>
-    <!-- From: file:/C:/Users/Regardt/Documents/StudioProjects/xyzreader/XYZReader/src/main/res/values-v21/styles.xml -->
+    <!-- From: file:/Users/regardtschindler/Documents/xyzreader/XYZReader/src/main/res/values-v21/styles.xml -->
     <eat-comment/>
     <style name="Theme.Bacon" parent="Theme.Bacon.Base">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
+
+        <item name="android:windowTranslucentNavigation">true</item>
+
+    </style>
+    <style name="tester" parent="Theme.Bacon">
+        <item name="android:windowExitTransition">@transition/grid_exit</item>
+        <!--<item name="android:windowReenterTransition">@android:transition/slide_bottom</item>-->
     </style>
 </resources>

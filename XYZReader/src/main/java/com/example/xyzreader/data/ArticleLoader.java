@@ -20,11 +20,11 @@ public class ArticleLoader extends CursorLoader {
         super(context, uri, Query.PROJECTION, null, null, ItemsContract.Items.DEFAULT_SORT);
     }
 
-//    @Override
-//    protected void onStartLoading() {
-//        forceLoad();
-//        super.onStartLoading();
-//    }
+    @Override
+    protected void onStartLoading() {
+        forceLoad();
+        super.onStartLoading();
+    }
 
     public interface Query {
         String[] PROJECTION = {
