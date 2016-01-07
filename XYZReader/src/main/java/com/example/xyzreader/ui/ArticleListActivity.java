@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -159,17 +160,40 @@ public class ArticleListActivity extends AppCompatActivity implements
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = getLayoutInflater().inflate(R.layout.list_item_article, parent, false);
             final ViewHolder vh = new ViewHolder(view);
+
+
+
+
+
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    Bundle bundle = ActivityOptions
-                            .makeSceneTransitionAnimation(ArticleListActivity.this, vh.thumbnailView, vh.thumbnailView.getTransitionName()).toBundle();
+                    Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(ArticleListActivity.this, vh.thumbnailView, vh.thumbnailView.getTransitionName()).toBundle();
 //                    getApplicationContext().startActivity();
+
+
+
 
                     Intent x = new Intent(ArticleListActivity.this, NewDetail.class);
 
-                    startActivity(x,bundle);
+
+
+
+
+
+                    Intent old = new Intent(Intent.ACTION_VIEW, ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
+
+//                    startActivity(x,bundle);
+
+
+//                    Log.wtf("regi",">>" + ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
+
+
+                    startActivity(old,bundle);
+
+//                    startActivity(old);
+
                 }
             });
             return vh;
@@ -177,7 +201,13 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
+
+
+
             mCursor.moveToPosition(position);
+
+            holder.thumbnailView.setTransitionName(getItemId(position)+"");
+
             holder.titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
 
             String x = getString(R.string.card_sub_header,
@@ -194,12 +224,14 @@ public class ArticleListActivity extends AppCompatActivity implements
 
             Glide.with(getApplicationContext())
                     .load(mCursor.getString(ArticleLoader.Query.PHOTO_URL))
+//                    .load(R.drawable.temp)
                     .placeholder(R.drawable.loading)
                     .crossFade()
                     .error(R.drawable.no_image_available)
+                    .centerCrop()
+//                    .fitCenter()
+//                    .dontTransform()
                     .into(holder.thumbnailView);
-
-
 
 
         }

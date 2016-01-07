@@ -1,4 +1,4 @@
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   Copyright 2015 Google Inc.
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +14,6 @@
   limitations under the License.
   -->
 
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape android:shape="oval">
-            <solid android:color="@color/theme_accent" />
-        </shape>
-    </item>
-    <item android:drawable="@drawable/white_selectable_item_background_circle" />
-</layer-list>
+<transitionSet xmlns:android="http://schemas.android.com/apk/res/android">
+    <changeImageTransform />
+</transitionSet>
