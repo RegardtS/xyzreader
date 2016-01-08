@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -29,11 +30,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.xyzreader.Article;
 import com.example.xyzreader.NewDetail;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An activity representing a list of Articles. This activity has different presentations for
@@ -50,6 +55,8 @@ public class ArticleListActivity extends AppCompatActivity implements
     private boolean mIsRefreshing = false;
 
     Adapter adapter;
+
+    ArrayList<Article> articles = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +89,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         getLoaderManager().initLoader(0, null, this);
 
 //        if (savedInstanceState == null) {
-            refresh();
+//            refresh();
 //        }
 
 
@@ -108,9 +115,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     private BroadcastReceiver mRefreshingReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.wtf("regi","onReceive");
             if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
-                Log.wtf("regi","onReceive2");
                 mIsRefreshing = intent.getBooleanExtra(UpdaterService.EXTRA_REFRESHING, false);
                 updateRefreshingUI();
             }
@@ -131,6 +136,24 @@ public class ArticleListActivity extends AppCompatActivity implements
         adapter.setAdapterCursor(cursor);
         adapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
+
+
+        articles.clear();
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+
+            Article temp = new Article(
+                    cursor.getString(ArticleLoader.Query._ID),
+                    cursor.getString(ArticleLoader.Query.TITLE),
+                    cursor.getString(ArticleLoader.Query.PUBLISHED_DATE),
+                    cursor.getString(ArticleLoader.Query.AUTHOR),
+                    cursor.getString(ArticleLoader.Query.THUMB_URL),
+                    cursor.getString(ArticleLoader.Query.PHOTO_URL),
+                    cursor.getString(ArticleLoader.Query.ASPECT_RATIO),
+                    cursor.getString(ArticleLoader.Query.BODY)
+
+            );
+            articles.add(temp);
+        }
     }
 
     @Override
@@ -175,7 +198,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
 
 
-                    Intent x = new Intent(ArticleListActivity.this, NewDetail.class);
+//                    Intent x = new Intent(ArticleListActivity.this, ArticleDetailActivity.class);
 
 
 
@@ -189,6 +212,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
 //                    Log.wtf("regi",">>" + ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
 
+                    old.putExtra("articles",articles);
 
                     startActivity(old,bundle);
 

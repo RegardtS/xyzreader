@@ -23,20 +23,21 @@ import android.view.ViewTreeObserver;
 import android.view.WindowInsets;
 import android.widget.ImageView;
 
+import com.example.xyzreader.Article;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
  * An activity representing a single Article detail screen, letting you swipe between articles.
  */
-public class ArticleDetailActivity extends AppCompatActivity
-        implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ArticleDetailActivity extends AppCompatActivity {
 
-    private Cursor mCursor;
+    //    private Cursor mCursor;
     private long mStartId;
 
     private long mSelectedItemId;
@@ -47,6 +48,8 @@ public class ArticleDetailActivity extends AppCompatActivity
     ArticleDetailFragment currFrag;
 
     SharedElementCallback tmp;
+
+    ArrayList<Article> articles = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +64,6 @@ public class ArticleDetailActivity extends AppCompatActivity
         setContentView(R.layout.activity_article_detail);
 
 
-
-
-
         mPagerAdapter = new MyPagerAdapter(getFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mPagerAdapter);
@@ -71,55 +71,53 @@ public class ArticleDetailActivity extends AppCompatActivity
         mPager.setPageMarginDrawable(new ColorDrawable(0x22000000));
 
 
-
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(final int position, float positionOffset, int positionOffsetPixels) {
-                if (mCursor != null) {
-                    mCursor.moveToPosition(position);
-                    mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
-
-
-
-
-                }
+//                if (mCursor != null) {
+//                    mCursor.moveToPosition(position);
+//                    mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
+//
+//
+//                }
+                Log.wtf("regi","onPageScrolled");
             }
 
             @Override
             public void onPageSelected(final int position) {
-                if (mCursor != null) {
-                    mCursor.moveToPosition(position);
-                    mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
-
-                    tmp = new SharedElementCallback(){
-                        @Override
-                        public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
-
-                            ArticleDetailFragment current = (ArticleDetailFragment)mPagerAdapter.getItem(position);
-
-                            try {
-                                if (current.getTopImage()!=null){
-//                                    Log.wtf("regi","dsaadsdsaadsasdasd");
-                                    names.clear();
-                                    names.add(current.getTopImage().getTransitionName());
-                                    sharedElements.clear();
-                                    sharedElements.put(current.getTopImage().getTransitionName(), current.getTopImage());
-                                }else{
-//                                    Log.wtf("regi","fail");
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-
-                        }
-                    };
-
-
-
-                    setEnterSharedElementCallback(tmp);
-
-                }
+                Log.wtf("regi","onPageSelected");
+//                if (mCursor != null) {
+//                    mCursor.moveToPosition(position);
+//                    mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
+//
+//                    tmp = new SharedElementCallback() {
+//                        @Override
+//                        public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+//
+//                            ArticleDetailFragment current = (ArticleDetailFragment) mPagerAdapter.getItem(position);
+//
+//                            try {
+//                                if (current.getTopImage() != null) {
+////                                    Log.wtf("regi","dsaadsdsaadsasdasd");
+//                                    names.clear();
+//                                    names.add(current.getTopImage().getTransitionName());
+//                                    sharedElements.clear();
+//                                    sharedElements.put(current.getTopImage().getTransitionName(), current.getTopImage());
+//                                } else {
+////                                    Log.wtf("regi","fail");
+//                                }
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//
+//
+//                        }
+//                    };
+//
+//
+//                    setEnterSharedElementCallback(tmp);
+//
+//                }
             }
 
             @Override
@@ -129,58 +127,65 @@ public class ArticleDetailActivity extends AppCompatActivity
         });
 
 
-
-
         if (savedInstanceState == null) {
             if (getIntent() != null && getIntent().getData() != null) {
                 mStartId = ItemsContract.Items.getItemId(getIntent().getData());
                 mSelectedItemId = mStartId;
             }
         }
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return ArticleLoader.newAllArticlesInstance(this);
-
-    }
 
 
-    @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        mCursor = cursor;
+        articles = getIntent().getExtras().getParcelableArrayList("articles");
+
         mPagerAdapter.notifyDataSetChanged();
 
-        // Select the start ID
-        if (mStartId > 0) {
-            mCursor.moveToFirst();
-            // TODO: optimize
-            while (!mCursor.isAfterLast()) {
-                if (mCursor.getLong(ArticleLoader.  Query._ID) == mStartId) {
-                    final int position = mCursor.getPosition();
-                    mPager.setCurrentItem(position, false);
-                    break;
-                }
-                mCursor.moveToNext();
+        for (int i = 0; i < articles.size(); i++) {
+
+            if(Long.valueOf(articles.get(i).getId()) == mStartId){
+                mPager.setCurrentItem(i, false);
+                break;
             }
-            mStartId = 0;
         }
+
+
+        //Log.wtf("regi","detail > initLoader");
+        //getLoaderManager().initLoader(0, null, this);
     }
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-        mCursor = null;
-        mPagerAdapter.notifyDataSetChanged();
-    }
-
+//    @Override
+//    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+//        return ArticleLoader.newAllArticlesInstance(this);
+//
+//    }
+//
+//
+//    @Override
+//    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+//        Log.wtf("regi","detail > onLoadFinished");
+//        mCursor = cursor;
+//        mPagerAdapter.notifyDataSetChanged();
+//
+//        for (mCursor.moveToFirst(); !mCursor.isAfterLast(); mCursor.moveToNext()) {
+//            if (mCursor.getLong(ArticleLoader.Query._ID) == mStartId) {
+//                final int position = mCursor.getPosition();
+//                mPager.setCurrentItem(position, false);
+//                break;
+//            }
+//        }
+//
+//    }
+//
+//    @Override
+//    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+//        mCursor = null;
+//        mPagerAdapter.notifyDataSetChanged();
+//    }
 
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter {
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
         }
-
 
 
         @Override
@@ -196,13 +201,14 @@ public class ArticleDetailActivity extends AppCompatActivity
         @Override
         public Fragment getItem(int position) {
 
-            mCursor.moveToPosition(position);
-            return ArticleDetailFragment.newInstance(mCursor.getLong(ArticleLoader.Query._ID));
+//            mCursor.moveToPosition(position);
+//            return ArticleDetailFragment.newInstance(mCursor.getLong(ArticleLoader.Query._ID));
+            return ArticleDetailFragment.newInstance(articles.get(position));
         }
 
         @Override
         public int getCount() {
-            return (mCursor != null) ? mCursor.getCount() : 0;
+            return (articles != null) ? articles.size() : 0;
         }
     }
 }

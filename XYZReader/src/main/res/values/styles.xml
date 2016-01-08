@@ -29,5 +29,9 @@
 
     <style name="Theme.Bacon" parent="Theme.Bacon.Base"/>
 
+    <style name="CollapsingToolbarLayoutExpandedTextStyle" parent="Theme.Bacon.Base">
+        <item name="android:textColor">@android:color/transparent</item>
+        <item name="android:textSize">0sp</item>
+    </style>
 
 </resources>

@@ -35,6 +35,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.bumptech.glide.Glide;
+import com.example.xyzreader.Article;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 
@@ -69,12 +70,22 @@ public class ArticleDetailFragment extends Fragment implements
 
     static Toolbar toolbar;
 
+    static Article article;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
     public ArticleDetailFragment() {
+    }
+
+    public static ArticleDetailFragment newInstance(Article article){
+        ArticleDetailFragment fragment = new ArticleDetailFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("article",article);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     public static ArticleDetailFragment newInstance(long itemId) {
@@ -90,13 +101,27 @@ public class ArticleDetailFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            mItemId = getArguments().getLong(ARG_ITEM_ID);
-        }
+//        if (getArguments().containsKey(ARG_ITEM_ID)) {
+//            mItemId = getArguments().getLong(ARG_ITEM_ID);
+//        }
+
+        article = getArguments().getParcelable("article");
 
         mIsCard = getResources().getBoolean(R.bool.detail_is_card);
         mStatusBarFullOpacityBottom = getResources().getDimensionPixelSize(R.dimen.detail_card_top_margin);
         setHasOptionsMenu(true);
+
+//        getLoaderManager().initLoader(0, null, this);
+
+        ActivityCompat.startPostponedEnterTransition(getActivity());
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        bindViews();
 
     }
 
@@ -112,7 +137,8 @@ public class ArticleDetailFragment extends Fragment implements
         // the fragment's onCreate may cause the same LoaderManager to be dealt to multiple
         // fragments because their mIndex is -1 (haven't been added to the activity yet). Thus,
         // we do this in onActivityCreated.
-        getLoaderManager().initLoader(0, null, this);
+//        getLoaderManager().initLoader(0, null, this);
+//        bindViews();
     }
 
 
@@ -129,45 +155,7 @@ public class ArticleDetailFragment extends Fragment implements
 
         getActivityCast().setSupportActionBar(toolbar);
 
-        Log.wtf("regi","onCreateView " + mItemId);
 
-
-
-//        mDrawInsetsFrameLayout = (DrawInsetsFrameLayout) mRootView.findViewById(R.id.draw_insets_frame_layout);
-//        mDrawInsetsFrameLayout.setOnInsetsCallback(new DrawInsetsFrameLayout.OnInsetsCallback() {
-//            @Override
-//            public void onInsetsChanged(Rect insets) {mTopInset = insets.top;
-//            }
-//        });
-//
-//        mScrollView = (ObservableScrollView) mRootView.findViewById(R.id.scrollview);
-//        mScrollView.setCallbacks(new ObservableScrollView.Callbacks() {
-//            @Override
-//            public void onScrollChanged() {
-//                mScrollY = mScrollView.getScrollY();
-//                getActivityCast().onUpButtonFloorChanged(mItemId, ArticleDetailFragment.this);
-//                mPhotoContainerView.setTranslationY((int) (mScrollY - mScrollY / PARALLAX_FACTOR));
-//                updateStatusBar();
-//            }
-//        });
-//
-//        mPhotoView = (ImageView) mRootView.findViewById(R.id.imageMain);
-//        mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
-//
-//        mStatusBarColorDrawable = new ColorDrawable(0);
-//
-//        mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
-//                        .setType("text/plain")
-//                        .setText("Some sample text")
-//                        .getIntent(), getString(R.string.action_share)));
-//            }
-//        });
-//
-//        bindViews();
-//        updateStatusBar();
         return mRootView;
     }
 
@@ -181,16 +169,28 @@ public class ArticleDetailFragment extends Fragment implements
 
     private void bindViews() {
 
-//        getActivityCast().setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
-
         if (mRootView == null) {
+            Log.wtf("regi","rootView is null");
             return;
         }
 
+        Glide.with(getActivity())
+                .load(article.getPhoto_url())
+//                    .load(R.drawable.temp)
+                .placeholder(R.drawable.loading)
+                .centerCrop()
+                .dontTransform()
+                .error(R.drawable.no_image_available)
+                .into(test);
+
+
+
+        getActivityCast().setTitle(article.getTitle());
+
+
+
         String temp = "NEVER";
 
-        Log.wtf("regi","bindViews " + mItemId);
-//        Log.wtf("regi","mCursor != null " + (mCursor != null));
 
 
         if (mCursor != null) {
@@ -198,22 +198,21 @@ public class ArticleDetailFragment extends Fragment implements
 
             temp = mCursor.getString(ArticleLoader.Query.TITLE);
 
+            Log.wtf("regi","temp == "+ temp);
+
 //            Log.wtf("regi","temp ==  "+ temp);
 
-//            getActivityCast().setTitle(">>>"+temp);
+            getActivityCast().setTitle(">>>"+temp);
 
-//            toolbar.setTitle(temp);
+            toolbar.setTitle(temp);
 
         }else{
-//            getLoaderManager().initLoader(0, null, this);
-//            return;
+            Log.wtf("regi","this is null");
         }
 
 
 
 
-
-        toolbar.setTitle("anything else222");
 
 
 
@@ -284,32 +283,22 @@ public class ArticleDetailFragment extends Fragment implements
 
         mCursor = cursor;//
         if (mCursor != null && !mCursor.moveToFirst()) {
-            Log.e(TAG, "Error reading item detail cursor");
+            Log.e(TAG, "Error reading item detail cursor mCursor != null: " + (mCursor != null) + " !mCursor.moveToFirst():" + (!mCursor.moveToFirst()));
             mCursor.close();
             mCursor = null;
             getActivityCast().finish();
         }else{
 
-            Glide.with(getActivity())
-                    .load(mCursor.getString(ArticleLoader.Query.PHOTO_URL))
-//                    .load(R.drawable.temp)
-                    .placeholder(R.drawable.loading)
-                    .centerCrop()
-                    .dontTransform()
-                    .error(R.drawable.no_image_available)
-                    .into(test);
-
-            ActivityCompat.startPostponedEnterTransition(getActivity());
 
 
+//            bindViews();
         }
 
-        bindViews();
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-//        mCursor = null;
-        //bindViews();
+        mCursor = null;
+//        bindViews();
     }
 }
