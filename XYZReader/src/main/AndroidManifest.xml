@@ -48,15 +48,6 @@
             android:name=".data.ItemsProvider"
             android:authorities="com.example.xyzreader"
             android:exported="false" />
-
-        <activity
-            android:name=".NewDetail"
-            android:label="@string/title_activity_new_detail"
-            android:parentActivityName=".ui.ArticleListActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.xyzreader.ui.ArticleListActivity" />
-        </activity>
     </application>
 
 </manifest>

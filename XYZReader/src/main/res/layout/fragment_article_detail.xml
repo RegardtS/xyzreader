@@ -2,6 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@android:color/background_light"
 
     >
@@ -14,7 +15,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/main.collapsing"
+            android:id="@+id/main_collapsing_tb"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
@@ -25,7 +26,7 @@
 
             <ImageView
                 android:id="@+id/imageMain"
-
+                android:background="@android:color/background_light"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
@@ -37,9 +38,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                android:title="Tester?"
+                app:popupTheme="@style/Theme.Bacon"
+                android:subtitle="@string/abc_action_menu_overflow_description"
+                app:subtitle="@string/abc_activity_chooser_view_see_all"
+                />
 
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
@@ -48,13 +52,65 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lineSpacingExtra="8dp"
-            android:padding="@dimen/activity_horizontal_margin"
-            android:text="@string/lorem"
-            android:textSize="20sp" />
+            android:orientation="vertical"
+            android:padding="16dp"
+            >
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:padding="@dimen/activity_horizontal_margin"
+                tools:text="Title"
+
+
+                style="@style/TextAppearance.AppCompat.Headline"
+                />
+
+
+            <TextView
+                android:id="@+id/author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/activity_horizontal_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingBottom="8dp"
+                tools:text="Author"
+                style="@style/TextAppearance.AppCompat.Subhead"
+                 />
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:paddingBottom="@dimen/activity_horizontal_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                tools:text="Date"
+                style="@style/TextAppearance.AppCompat.Subhead"
+                />
+
+            <TextView
+                android:id="@+id/body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="8dp"
+                android:padding="@dimen/activity_horizontal_margin"
+                android:text="@string/lorem"
+
+                style="@style/TextAppearance.AppCompat.Body1"
+                 />
+
+        </LinearLayout>
+
+
+
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton

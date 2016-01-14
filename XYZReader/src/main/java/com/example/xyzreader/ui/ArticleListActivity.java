@@ -29,7 +29,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.xyzreader.NewDetail;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
@@ -82,7 +81,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         getLoaderManager().initLoader(0, null, this);
 
 //        if (savedInstanceState == null) {
-            refresh();
+//            refresh();
 //        }
 
 
@@ -169,30 +168,21 @@ public class ArticleListActivity extends AppCompatActivity implements
                 @Override
                 public void onClick(View view) {
 
-                    Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(ArticleListActivity.this, vh.thumbnailView, vh.thumbnailView.getTransitionName()).toBundle();
+
+//                    Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(ArticleListActivity.this, vh.thumbnailView, vh.thumbnailView.getTransitionName()).toBundle();
 //                    getApplicationContext().startActivity();
 
-
-
-
-                    Intent x = new Intent(ArticleListActivity.this, NewDetail.class);
-
-
-
-
-
+//                    Intent x = new Intent(ArticleListActivity.this, NewDetail.class);
 
                     Intent old = new Intent(Intent.ACTION_VIEW, ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
 
 //                    startActivity(x,bundle);
 
-
 //                    Log.wtf("regi",">>" + ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
 
+//                    startActivity(old,bundle);
 
-                    startActivity(old,bundle);
-
-//                    startActivity(old);
+                    startActivity(old);
 
                 }
             });
@@ -210,6 +200,11 @@ public class ArticleListActivity extends AppCompatActivity implements
 
             holder.titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
 
+//            holder.thumbnailView.setRatio(mCursor.getString(ArticleLoader.Query.ASPECT_RATIO));
+
+
+
+
             String x = getString(R.string.card_sub_header,
                     DateUtils.getRelativeTimeSpanString(
                             mCursor.getLong(ArticleLoader.Query.PUBLISHED_DATE),
@@ -217,20 +212,26 @@ public class ArticleListActivity extends AppCompatActivity implements
                             DateUtils.HOUR_IN_MILLIS,
                             DateUtils.FORMAT_ABBREV_ALL)
                             .toString(),
-                    mCursor.getString(ArticleLoader.Query.AUTHOR))
-                    ;
+                    mCursor.getString(ArticleLoader.Query.AUTHOR));
 
             holder.subtitleView.setText(x);
+
+            holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
+
+
+
+//            holder.thumbnailView.setImageUrl(
+//                    mCursor.getString(ArticleLoader.Query.PHOTO_URL),
+//                    ImageLoaderHelper.getInstance(ArticleListActivity.this).getImageLoader());
 
             Glide.with(getApplicationContext())
                     .load(mCursor.getString(ArticleLoader.Query.PHOTO_URL))
 //                    .load(R.drawable.temp)
-                    .placeholder(R.drawable.loading)
+//                    .placeholder(R.drawable.loading)
                     .crossFade()
                     .error(R.drawable.no_image_available)
-                    .centerCrop()
-//                    .fitCenter()
-//                    .dontTransform()
+                    .thumbnail(0.5f)
+
                     .into(holder.thumbnailView);
 
 
@@ -246,13 +247,13 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView thumbnailView;
+        public DynamicHeightNetworkImageView thumbnailView;
         public TextView titleView;
         public TextView subtitleView;
 
         public ViewHolder(View view) {
             super(view);
-            thumbnailView = (ImageView) view.findViewById(R.id.thumbnail);
+            thumbnailView = (DynamicHeightNetworkImageView) view.findViewById(R.id.thumbnail);
             titleView = (TextView) view.findViewById(R.id.article_title);
             subtitleView = (TextView) view.findViewById(R.id.article_subtitle);
         }

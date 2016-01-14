@@ -15,6 +15,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.ActivityCompat;
 
 import android.support.v4.app.ShareCompat;
@@ -67,7 +68,9 @@ public class ArticleDetailFragment extends Fragment implements
 
     ImageView test;
 
-    static Toolbar toolbar;
+    Toolbar toolbar;
+
+    TextView tvAuthor, tvDate, tvTitle, tvBody;
 
 
     /**
@@ -116,106 +119,74 @@ public class ArticleDetailFragment extends Fragment implements
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
 
         test = (ImageView) mRootView.findViewById(R.id.imageMain);
-        test.setTransitionName(mItemId+"");
+        test.setTransitionName(mItemId + "");
 
         toolbar = (Toolbar) mRootView.findViewById(R.id.mainToolbar);
 
+
         getActivityCast().setSupportActionBar(toolbar);
+        getActivityCast().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getActivityCast().getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        Log.wtf("regi","onCreateView " + mItemId);
 
+        tvAuthor = (TextView) mRootView.findViewById(R.id.author);
+        tvDate = (TextView) mRootView.findViewById(R.id.date);
+        tvTitle = (TextView) mRootView.findViewById(R.id.title);
+        tvBody = (TextView) mRootView.findViewById(R.id.body);
 
-
-//        mDrawInsetsFrameLayout = (DrawInsetsFrameLayout) mRootView.findViewById(R.id.draw_insets_frame_layout);
-//        mDrawInsetsFrameLayout.setOnInsetsCallback(new DrawInsetsFrameLayout.OnInsetsCallback() {
-//            @Override
-//            public void onInsetsChanged(Rect insets) {mTopInset = insets.top;
-//            }
-//        });
-//
-//        mScrollView = (ObservableScrollView) mRootView.findViewById(R.id.scrollview);
-//        mScrollView.setCallbacks(new ObservableScrollView.Callbacks() {
-//            @Override
-//            public void onScrollChanged() {
-//                mScrollY = mScrollView.getScrollY();
-//                getActivityCast().onUpButtonFloorChanged(mItemId, ArticleDetailFragment.this);
-//                mPhotoContainerView.setTranslationY((int) (mScrollY - mScrollY / PARALLAX_FACTOR));
-//                updateStatusBar();
-//            }
-//        });
-//
-//        mPhotoView = (ImageView) mRootView.findViewById(R.id.imageMain);
-//        mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
-//
-//        mStatusBarColorDrawable = new ColorDrawable(0);
-//
-//        mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
-//                        .setType("text/plain")
-//                        .setText("Some sample text")
-//                        .getIntent(), getString(R.string.action_share)));
-//            }
-//        });
-//
-//        bindViews();
-//        updateStatusBar();
         return mRootView;
     }
 
-    public View getTopImage() throws Exception{
-        if(test == null){
+    public View getTopImage() throws Exception {
+        if (test == null) {
             //throw new Exception("testerr is null");
         }
         return test;
     }
 
-
     private void bindViews() {
+
+//        getActivityCast().setTitle("temr");
 
 //        getActivityCast().setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
 
-        if (mRootView == null) {
+        if (mRootView != null && mCursor != null) {
+
+            tvAuthor.setText(mCursor.getString(ArticleLoader.Query.AUTHOR));
+            tvDate.setText(Html.fromHtml(DateUtils.getRelativeTimeSpanString(mCursor.getLong(ArticleLoader.Query.PUBLISHED_DATE), System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS, DateUtils.FORMAT_ABBREV_ALL).toString()));
+            tvTitle.setText(mCursor.getString(ArticleLoader.Query.TITLE));
+            tvBody.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)));
+
+        } else {
+
             return;
         }
 
         String temp = "NEVER";
 
-        Log.wtf("regi","bindViews " + mItemId);
-//        Log.wtf("regi","mCursor != null " + (mCursor != null));
+
+//            getActivityCast().setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
 
 
-        if (mCursor != null) {
-            //toolbar.setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
-
-            temp = mCursor.getString(ArticleLoader.Query.TITLE);
-
+        temp = mCursor.getString(ArticleLoader.Query.TITLE);
+//            getActivityCast().setTitle(temp);
+//            Log.wtf("regi","mCursor != null " + mCursor.getString(ArticleLoader.Query.TITLE));
+//
 //            Log.wtf("regi","temp ==  "+ temp);
 
 //            getActivityCast().setTitle(">>>"+temp);
 
 //            toolbar.setTitle(temp);
 
-        }else{
-//            getLoaderManager().initLoader(0, null, this);
-//            return;
-        }
 
 
-
-
-
-        toolbar.setTitle("anything else222");
-
-
+//        toolbar.setTitle("anything else222");
 
 
 //
@@ -266,7 +237,7 @@ public class ArticleDetailFragment extends Fragment implements
 //            bodyView.setText("N/A");
 //        }
 
-    }
+}
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -288,7 +259,7 @@ public class ArticleDetailFragment extends Fragment implements
             mCursor.close();
             mCursor = null;
             getActivityCast().finish();
-        }else{
+        } else {
 
             Glide.with(getActivity())
                     .load(mCursor.getString(ArticleLoader.Query.PHOTO_URL))
@@ -301,15 +272,15 @@ public class ArticleDetailFragment extends Fragment implements
 
             ActivityCompat.startPostponedEnterTransition(getActivity());
 
-
+            bindViews();
         }
 
-        bindViews();
+
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
 //        mCursor = null;
-        //bindViews();
+//        bindViews();
     }
 }

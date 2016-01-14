@@ -61,7 +61,7 @@ public class ArticleDetailActivity extends AppCompatActivity
         setContentView(R.layout.activity_article_detail);
 
 
-
+//        setTitle("tessdst");
 
 
         mPagerAdapter = new MyPagerAdapter(getFragmentManager());
@@ -75,21 +75,23 @@ public class ArticleDetailActivity extends AppCompatActivity
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(final int position, float positionOffset, int positionOffsetPixels) {
-                if (mCursor != null) {
-                    mCursor.moveToPosition(position);
-                    mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
 
-
-
-
-                }
+//                if (mCursor != null) {
+//                    mCursor.moveToPosition(position);
+//                    mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
+//
+//                }
             }
 
             @Override
             public void onPageSelected(final int position) {
+//                Log.wtf("regi","onPageSelected");
                 if (mCursor != null) {
                     mCursor.moveToPosition(position);
                     mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
+
+//                    setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
+
 
                     tmp = new SharedElementCallback(){
                         @Override
@@ -124,7 +126,7 @@ public class ArticleDetailActivity extends AppCompatActivity
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
+//                Log.wtf("regi","onPageScrollStateChanged");
             }
         });
 
@@ -143,7 +145,6 @@ public class ArticleDetailActivity extends AppCompatActivity
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return ArticleLoader.newAllArticlesInstance(this);
-
     }
 
 

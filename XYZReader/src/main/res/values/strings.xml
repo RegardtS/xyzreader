@@ -10,7 +10,6 @@
     <string name="up">Up</string>
 
     <string name="card_sub_header">%1$s by %2$s</string>
-    <string name="title_activity_new_detail">NewDetail</string>
 
 
     <string name="transition_photo">transition_photo</string>
