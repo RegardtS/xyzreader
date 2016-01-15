@@ -16,6 +16,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 
 import android.support.v4.app.ShareCompat;
@@ -36,6 +37,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.bumptech.glide.Glide;
+import com.example.xyzreader.CoolDeviceChecker;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 
@@ -71,6 +73,8 @@ public class ArticleDetailFragment extends Fragment implements
     Toolbar toolbar;
 
     TextView tvAuthor, tvDate, tvTitle, tvBody;
+
+    FloatingActionButton fab;
 
 
     /**
@@ -125,7 +129,10 @@ public class ArticleDetailFragment extends Fragment implements
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
 
         test = (ImageView) mRootView.findViewById(R.id.imageMain);
-        test.setTransitionName(mItemId + "");
+
+        if(CoolDeviceChecker.isCool()){
+            test.setTransitionName(mItemId + "");
+        }
 
         toolbar = (Toolbar) mRootView.findViewById(R.id.mainToolbar);
 
@@ -140,6 +147,8 @@ public class ArticleDetailFragment extends Fragment implements
         tvTitle = (TextView) mRootView.findViewById(R.id.title);
         tvBody = (TextView) mRootView.findViewById(R.id.body);
 
+        fab = (FloatingActionButton) mRootView.findViewById(R.id.fab);
+
         return mRootView;
     }
 
@@ -152,16 +161,23 @@ public class ArticleDetailFragment extends Fragment implements
 
     private void bindViews() {
 
-//        getActivityCast().setTitle("temr");
-
-//        getActivityCast().setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
-
         if (mRootView != null && mCursor != null) {
 
             tvAuthor.setText(mCursor.getString(ArticleLoader.Query.AUTHOR));
             tvDate.setText(Html.fromHtml(DateUtils.getRelativeTimeSpanString(mCursor.getLong(ArticleLoader.Query.PUBLISHED_DATE), System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS, DateUtils.FORMAT_ABBREV_ALL).toString()));
             tvTitle.setText(mCursor.getString(ArticleLoader.Query.TITLE));
             tvBody.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)));
+
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
+                            .setType("text/plain")
+                            .setText("Some sample text")
+                            .getIntent(), getString(R.string.action_share)));
+                }
+            });
+
 
         } else {
 
@@ -282,5 +298,9 @@ public class ArticleDetailFragment extends Fragment implements
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
 //        mCursor = null;
 //        bindViews();
+    }
+
+    public void tester(View view){
+        Log.wtf("regi","tester");
     }
 }

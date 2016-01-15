@@ -31,8 +31,8 @@
     </style>
 
     <style name="tester" parent="Theme.Bacon">
-        <item name="android:windowExitTransition">@transition/grid_exit</item>
-        <item name="android:windowReenterTransition">@android:transition/slide_bottom</item>
+        <!--<item name="android:windowExitTransition">@transition/grid_exit</item>-->
+        <!--<item name="android:windowReenterTransition">@android:transition/slide_bottom</item>-->
     </style>
 
 </resources>

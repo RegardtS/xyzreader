@@ -32,6 +32,7 @@ public class ItemsContract {
 		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.com.example.xyzreader.items";
 
         public static final String DEFAULT_SORT = PUBLISHED_DATE + " DESC";
+        public static final String ID_SORT = _ID + " ASC";
 
 		/** Matches: /items/ */
 		public static Uri buildDirUri() {
