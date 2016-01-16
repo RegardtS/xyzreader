@@ -17,7 +17,7 @@ public class ArticleLoader extends CursorLoader {
     }
 
     private ArticleLoader(Context context, Uri uri) {
-        super(context, uri, Query.PROJECTION, null, null, ItemsContract.Items.ID_SORT);
+        super(context, uri, Query.PROJECTION, null, null, ItemsContract.Items.DEFAULT_SORT);
     }
 
     @Override

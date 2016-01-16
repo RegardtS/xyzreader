@@ -74,7 +74,38 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         getLoaderManager().initLoader(0, null, this);
 
+        //if (savedInstanceState == null) {
+                        refresh();
+        //}
+
     }
+
+    private void refresh() {
+        startService(new Intent(this, UpdaterService.class));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerReceiver(mRefreshingReceiver, new IntentFilter(UpdaterService.BROADCAST_ACTION_STATE_CHANGE));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(mRefreshingReceiver);
+    }
+
+    private BroadcastReceiver mRefreshingReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
+//                mIsRefreshing = intent.getBooleanExtra(UpdaterService.EXTRA_REFRESHING, false);
+//                updateRefreshingUI();
+            }
+        }
+    };
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -89,7 +120,8 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {}
+    public void onLoaderReset(Loader<Cursor> loader) {
+    }
 
     @Override
     public void onRefresh() {
@@ -99,7 +131,8 @@ public class ArticleListActivity extends AppCompatActivity implements
     private class Adapter extends RecyclerView.Adapter<ViewHolder> {
         private Cursor mCursor;
 
-        public Adapter(){}
+        public Adapter() {
+        }
 
         public void setAdapterCursor(Cursor cursor) {
             mCursor = cursor;
@@ -122,10 +155,10 @@ public class ArticleListActivity extends AppCompatActivity implements
 
                     Intent old = new Intent(Intent.ACTION_VIEW, ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
 
-                    if(CoolDeviceChecker.isCool()){
+                    if (CoolDeviceChecker.isCool()) {
                         Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(ArticleListActivity.this, vh.thumbnailView, vh.thumbnailView.getTransitionName()).toBundle();
-                        startActivity(old,bundle);
-                    }else{
+                        startActivity(old, bundle);
+                    } else {
                         startActivity(old);
                     }
                 }
@@ -138,8 +171,8 @@ public class ArticleListActivity extends AppCompatActivity implements
 
             mCursor.moveToPosition(position);
 
-            if(CoolDeviceChecker.isCool()){
-                holder.thumbnailView.setTransitionName(getItemId(position)+"");
+            if (CoolDeviceChecker.isCool()) {
+                holder.thumbnailView.setTransitionName(getItemId(position) + "");
             }
 
             holder.titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
@@ -163,7 +196,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         @Override
         public int getItemCount() {
-            if (mCursor == null){
+            if (mCursor == null) {
                 return 0;
             }
             return mCursor.getCount();

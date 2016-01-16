@@ -118,40 +118,19 @@ public class ArticleDetailActivity extends AppCompatActivity
         mCursor = cursor;
         mPagerAdapter.notifyDataSetChanged();
 
-
-        final int position = findCursor(mCursor,0,mCursor.getCount(),mStartId).getPosition();
-        mPager.setCurrentItem(position, false);
-
         // Select the start ID
-//        if (mStartId > 0) {
-//            mCursor.moveToFirst();
-//
-//
-//            // TODO: optimize
-//            while (!mCursor.isAfterLast()) {
-//                if (mCursor.getLong(ArticleLoader.  Query._ID) == mStartId) {
-//                    final int position = mCursor.getPosition();
-//                    mPager.setCurrentItem(position, false);
-//                    break;
-//                }
-//                mCursor.moveToNext();
-//            }
-//            mStartId = 0;
-//        }
-    }
-
-    public Cursor findCursor(Cursor data, int low, int high, long searchID) {
-
-        int mid = (low + high) / 2;
-
-        if (low > high) {
-            return null;
-        } else if (mCursor.getLong(ArticleLoader.  Query._ID) == searchID) {
-            return data;
-        } else if (mCursor.getLong(ArticleLoader.  Query._ID) < searchID) {
-            return findCursor(data, mid + 1, high, searchID);
-        } else {
-            return findCursor(data, low, mid - 1, searchID);
+        if (mStartId > 0) {
+            mCursor.moveToFirst();
+            // TODO: optimize
+            while (!mCursor.isAfterLast()) {
+                if (mCursor.getLong(ArticleLoader.  Query._ID) == mStartId) {
+                    final int position = mCursor.getPosition();
+                    mPager.setCurrentItem(position, false);
+                    break;
+                }
+                mCursor.moveToNext();
+            }
+            mStartId = 0;
         }
     }
 

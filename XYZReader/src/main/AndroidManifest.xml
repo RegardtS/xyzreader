@@ -16,7 +16,6 @@
         android:theme="@style/Theme.Bacon">
         <activity
             android:name=".ui.ArticleListActivity"
-            android:theme="@style/tester"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
